@@ -36,6 +36,6 @@ def __init__(lift, lthrust, rthrust, rudder):
     else:
         return("rudder pin is the same as one of the other pins")
         GPIO.cleanup()
-
-
-
+    
+    def startup():
+        
