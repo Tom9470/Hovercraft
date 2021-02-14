@@ -1,7 +1,8 @@
 import RPi.GPIO as GPIO
 import time
 print("The UPHCL. (Universal Pi Hovercraft Control Library)\nSyntax for setup is Hovercraft(lift pin, maximum lift power in percent, left thrust pin, right thrust pin, rudder pin.).\n If you do not have a rudder, then put \"None\".\n for usage, refer to https://github.com/Tom9470/Hovercraft")
-
+global current_lift
+current_lift = 0
 def setup(lift, maxlift, lthrust, rthrust, rudder):
 
     GPIO.setmode(GPIO.BOARD)
@@ -50,12 +51,13 @@ def setup(lift, maxlift, lthrust, rthrust, rudder):
         return("rudder pin is the same as one of the other pins")
         GPIO.cleanup()
     
-    def startup():
-        for PW in range(0, maxlift, 1):
-            pwm.ChangeDutyCycle(PW)
-            time.sleep(0.05)
-    
-    def shutdown():
-        pwm.ChangeDutyCycle(0)
-    
-    
+    def change_lift(magnitude):
+        if current_lift < magnitude:
+            for PW in range(current_lift, magnitude, 1):
+                pwm.ChangeDutyCycle(PW)
+                time.sleep(0.05)
+                
+        elif current_lift > magnitude:
+            for PW in range(current_lift, magnitude, -1):
+                pwm.ChangeDutyCycle(PW)
+                time.sleep(0.05)
