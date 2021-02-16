@@ -57,10 +57,11 @@ def setup(lift, maxlift, lthrust, rthrust, rudder):
                 for PW in range(current_lift, magnitude, 1):
                     pwm.ChangeDutyCycle(PW)
                     time.sleep(0.05)
+
+            elif current_lift > magnitude:
+                for PW in range(current_lift, magnitude, -1):
+                    pwm.ChangeDutyCycle(PW)
+                    time.sleep(0.05)
+
         except:
             print("That didn't work. change_lift() requires and only accepts an integer parameter")
-
-        elif current_lift > magnitude:
-            for PW in range(current_lift, magnitude, -1):
-                pwm.ChangeDutyCycle(PW)
-                time.sleep(0.05)
