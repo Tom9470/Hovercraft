@@ -1,9 +1,10 @@
 import RPi.GPIO as GPIO
 import time
-print("The UPHCL. (Universal Pi Hovercraft Control Library)\nSyntax for setup is Hovercraft(lift pin, maximum lift power in percent, left thrust pin, right thrust pin, rudder pin.).\n If you do not have a rudder, then put \"None\".\n for usage, refer to https://github.com/Tom9470/Hovercraft")
+print("The UPHCL. (Universal Pi Hovercraft Control Library)\nSyntax for setup is:\nHovercraft(lift pin, maximum lift power in percent, forward left thrust pin, backward left thrust pin, forward right thrust pin, backward right thrust pin, rudder pin.).\n If you do not have a rudder, then put \"None\".\n for usage, refer to https://github.com/Tom9470/Hovercraft")
 global current_lift
 current_lift = 0
-def setup(lift, maxlift, lthrust, rthrust, rudder):
+usedpins = list()
+def setup(lift, maxlift, lthrustfwd, lthrustbkwd, rthrustfwd, rthrustbkwd, rudder):
 
     GPIO.setmode(GPIO.BOARD)
     global lift_pin
@@ -12,30 +13,58 @@ def setup(lift, maxlift, lthrust, rthrust, rudder):
     GPIO.output(lift_pin, GPIO.LOW)
     liftpwm = GPIO.PWM(lift_pin, 100)
     liftpwm.start(0)
+    usedpins.add(lift)
        
-    if lthrust != lift:
-        global left_thrust
-        left_thrust = GPIO.setup(lthrust, GPIO.OUT)
+    if lthrustfwd not in usedpins:
+        global left_thrustfwd
+        left_thrustfwd = GPIO.setup(lthrustfwd, GPIO.OUT)
         GPIO.output(left_thrust, GPIO.LOW)
-        ltpwm = GPIO.PWM(left_thrust, 100)
-        ltpwm.start(0)
+        ltfwdpwm = GPIO.PWM(left_thrustfwd, 100)
+        ltfwdpwm.start(0)
+        usedpins.add(lthrustfwd)
 
     else:
-        return("left thrust is the same as one of the other pins")
+        return("left thrust forward is the same as one of the other pins")
         GPIO.cleanup()
 
-    if rthrust != lthrust and rthrust != lift:
-        global right_thrust
-        right_thrust = GPIO.setup(rthrust, GPIO.OUT)
+    if lthrustbkwd not in usedpins:
+        global left_thrustbkwd
+        left_thrustbkwd = GPIO.setup(lthrustbkwd, GPIO.OUT)
+        GPIO.output(left_thrustbkwd, GPIO.LOW)
+        ltbkwdpwm = GPIO.PWM(left_thrustbkwd, 100)
+        ltbkwdpwm.start(0)
+        usedpins.add(lthrustbkwd)
+
+    else:
+        return("left thrust backward is the same as one of the other pins")
+        GPIO.cleanup()
+
+    if rthrustfwd not in usedpins:
+        global right_thrustfwd
+        right_thrustfwd = GPIO.setup(rthrustfwd, GPIO.OUT)
         GPIO.output(right_thrust, GPIO.LOW)
-        rtpwm = GPIO.PWM(right_thrust, 100)
-        rtpwm.start(0)
+        rtfwdpwm = GPIO.PWM(right_thrustfwd, 100)
+        rtfwdpwm.start(0)
+        usedpins.add(rthrustfwd)
 
     else:
-        return("right thrust is the same as one of the other pins")
+        return("right thrust forward is the same as one of the other pins")
         GPIO.cleanup()
 
-    if rudder != rthrust and rudder != lthrust and rudder != lift:
+    if rthrustbkwd not in usedpins:
+        global right_thrustbkwd
+        right_thrustbkwd = GPIO.setup(rthrustbkwd, GPIO.OUT)
+        GPIO.output(right_thrustbkwd, GPIO.LOW)
+        rtbkwdpwm = GPIO.PWM(right_thrustbkwd, 100)
+        rtbkwdpwm.start(0)
+        usedpins.add(rthrustbkwd)
+
+    else:
+        return("right thrust backward is the same as one of the other pins")
+        GPIO.cleanup()
+
+
+    if rudder not in usedpins:
         global is_rudder_pin
         if isinstance(rudder, int):
             is_rudder_pin = 1
@@ -43,6 +72,7 @@ def setup(lift, maxlift, lthrust, rthrust, rudder):
             rudder_pin = GPIO.setup(rudder, GPIO.OUT)
             yawpwm = GPIO.PWM(rudder_pin, 100)
             yawpwm.start(0)
+            usedpins.add(rudder)
         
         else:
             is_rudder_pin = 0
@@ -51,17 +81,22 @@ def setup(lift, maxlift, lthrust, rthrust, rudder):
         return("rudder pin is the same as one of the other pins")
         GPIO.cleanup()
     
-    def change_lift(magnitude):
-        try:
-            if current_lift < magnitude:
-                for PW in range(current_lift, magnitude, 1):
-                    pwm.ChangeDutyCycle(PW)
-                    time.sleep(0.05)
+def change_lift(magnitude):
+    try:
+        if current_lift < magnitude:
+            for PW in range(current_lift, magnitude, 1):
+                pwm.ChangeDutyCycle(PW)
+                time.sleep(0.05)
 
-            elif current_lift > magnitude:
-                for PW in range(current_lift, magnitude, -1):
-                    pwm.ChangeDutyCycle(PW)
-                    time.sleep(0.05)
+        elif current_lift > magnitude:
+            for PW in range(current_lift, magnitude, -1):
+                pwm.ChangeDutyCycle(PW)
+                time.sleep(0.05)
 
-        except:
-            print("That didn't work. change_lift() requires and only accepts an integer parameter")
+    except:
+        print("That didn't work. change_lift() requires and only accepts an integer parameter")
+    
+def change_thrust(magnitude):
+    left_thrust.ChangeDutyCycle(magnitude)
+    right_thrust.ChangeDutyCycle(magnitude)
+    
