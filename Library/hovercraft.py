@@ -118,4 +118,7 @@ def change_thrust(magnitude):
 
     except:
         print("change_thrust(needs to be an integer between -100 and 100)")
-    
+
+def turn(Direction):
+    if Direction == "left":
+        
