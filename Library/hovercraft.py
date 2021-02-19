@@ -4,6 +4,9 @@ print("The UPHCL. (Universal Pi Hovercraft Control Library)\nSyntax for setup is
 global current_lift
 current_lift = 0
 usedpins = list()
+global thrust
+thrust = int(0)
+
 def setup(lift, maxlift, lthrustfwd, lthrustbkwd, rthrustfwd, rthrustbkwd, rudder):
 
     GPIO.setmode(GPIO.BOARD)
@@ -103,22 +106,24 @@ def change_thrust(magnitude):
             right_thrustfwd.ChangeDutyCycle(magnitude)
             left_thrustbkwd.ChangeDutyCycle(0)
             right_thrustbkwd.ChangeDutyCycle(0)
+            thrust = magnitude
     
         elif magnitude < 0:
             left_thrustbkwd.ChangeDutyCycle(magnitude)
             right_thrustbkwd.ChangeDutyCycle(magnitude)
             left_thrustfwd.ChangeDutyCycle(0)
             right_thrustfwd.ChangeDutyCycle(0)
+            thrust = magnitude
         
         elif magnitude == 0:
             left_thrustbkwd.ChangeDutyCycle(0)
             right_thrustbkwd.ChangeDutyCycle(0)
             left_thrustfwd.ChangeDutyCycle(0)
             right_thrustfwd.ChangeDutyCycle(0)
+            thrust = 0
 
     except:
         print("change_thrust(needs to be an integer between -100 and 100)")
 
 def turn(Direction):
     if Direction == "left":
-        
