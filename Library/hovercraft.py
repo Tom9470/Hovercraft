@@ -127,4 +127,5 @@ def change_thrust(magnitude):
 
 def turn(Direction):
     if Direction == "left":
-        if thrust > 0: 
+        if thrust > 0:
+            
