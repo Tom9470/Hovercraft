@@ -97,6 +97,25 @@ def change_lift(magnitude):
         print("That didn't work. change_lift() requires and only accepts an integer parameter")
     
 def change_thrust(magnitude):
-    left_thrust.ChangeDutyCycle(magnitude)
-    right_thrust.ChangeDutyCycle(magnitude)
+    try:
+        if magnitude > 0:
+            left_thrustfwd.ChangeDutyCycle(magnitude)
+            right_thrustfwd.ChangeDutyCycle(magnitude)
+            left_thrustbkwd.ChangeDutyCycle(0)
+            right_thrustbkwd.ChangeDutyCycle(0)
+    
+        elif magnitude < 0:
+            left_thrustbkwd.ChangeDutyCycle(magnitude)
+            right_thrustbkwd.ChangeDutyCycle(magnitude)
+            left_thrustfwd.ChangeDutyCycle(0)
+            right_thrustfwd.ChangeDutyCycle(0)
+        
+        elif magnitude == 0:
+            left_thrustbkwd.ChangeDutyCycle(0)
+            right_thrustbkwd.ChangeDutyCycle(0)
+            left_thrustfwd.ChangeDutyCycle(0)
+            right_thrustfwd.ChangeDutyCycle(0)
+
+    except:
+        print("change_thrust(needs to be an integer between -100 and 100)")
     
