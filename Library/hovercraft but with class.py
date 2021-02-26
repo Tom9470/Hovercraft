@@ -7,7 +7,7 @@ usedpins = list()
 global thrust
 thrust = int(0)
 class Hovercraft():
-    def __init__(lift, maxlift, lthrustfwd, lthrustbkwd, rthrustfwd, rthrustbkwd, rudder):
+    def __init__(self, lift, maxlift, lthrustfwd, lthrustbkwd, rthrustfwd, rthrustbkwd, rudder):
 
         GPIO.setmode(GPIO.BOARD)
         global lift_pin
