@@ -7,24 +7,24 @@ usedpins = list()
 global thrust
 thrust = int(0)
 
-def setup(lift, maxlift, lthrustfwd, lthrustbkwd, rthrustfwd, rthrustbkwd, rudder):
+def setup(self, lift, maxlift, lthrustfwd, lthrustbkwd, rthrustfwd, rthrustbkwd, rudder):
 
     GPIO.setmode(GPIO.BOARD)
-    global lift_pin
-    global maxlift
-    lift_pin = GPIO.setup(lift, GPIO.OUT)
-    GPIO.output(lift_pin, GPIO.LOW)
-    liftpwm = GPIO.PWM(lift_pin, 100)
+    global self.liftpwm
+    global self.maxlift
+    GPIO.setup(self.lift, GPIO.OUT)
+    GPIO.output(lift, GPIO.LOW)
+    liftpwm = GPIO.PWM(lift, 100)
     liftpwm.start(0)
-    usedpins.add(lift)
+    usedpins.add(self.lift)
        
-    if lthrustfwd not in usedpins:
-        global left_thrustfwd
-        left_thrustfwd = GPIO.setup(lthrustfwd, GPIO.OUT)
-        GPIO.output(left_thrust, GPIO.LOW)
-        ltfwdpwm = GPIO.PWM(left_thrustfwd, 100)
+    if self.lthrustfwd not in usedpins:
+        global self.ltfwdpwm
+        GPIO.setup(self.lthrustfwd, GPIO.OUT)
+        GPIO.output(self.lthrustfwd, GPIO.LOW)
+        ltfwdpwm = GPIO.PWM(self.lthrustfwd, 100)
         ltfwdpwm.start(0)
-        usedpins.add(lthrustfwd)
+        usedpins.add(self.lthrustfwd)
 
     else:
         return("left thrust forward is the same as one of the other pins")
