@@ -84,7 +84,7 @@ class Hovercraft():
             return("rudder pin is the same as one of the other pins")
             GPIO.cleanup()
 
-    def change_lift(magnitude):
+    def change_lift(self, magnitude):
         try:
             if current_lift < magnitude:
                 for PW in range(current_lift, magnitude, 1):
@@ -99,7 +99,7 @@ class Hovercraft():
         except:
             print("That didn't work. change_lift() requires and only accepts an integer parameter")
 
-    def change_thrust(magnitude):
+    def change_thrust(self, magnitude):
         try:
             if magnitude > 0:
                 left_thrustfwd.ChangeDutyCycle(magnitude)
@@ -125,7 +125,7 @@ class Hovercraft():
         except:
             print("change_thrust(needs to be an integer between -100 and 100)")
 
-    def turn(Direction):
+    def turn(self, Direction):
         if Direction == "left":
             if thrust > 0:
                 if thrust-25
